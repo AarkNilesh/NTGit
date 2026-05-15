@@ -1,0 +1,7 @@
+/storage/*.sqlite
+/storage/*.sqlite-*
+/vendor/
+/react/node_modules/
+/react/dist/
+
+/dist/

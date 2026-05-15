@@ -1,0 +1,67 @@
+<?php
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
+
+$user = require_login();
+$clientId = (int) ($_GET['client_id'] ?? 0);
+
+$stmt = db()->prepare('SELECT * FROM clients WHERE id = ? AND user_id = ?');
+$stmt->execute([$clientId, $user['id']]);
+$client = $stmt->fetch();
+
+if (!$client) {
+    http_response_code(404);
+    exit('Client not found');
+}
+
+$report = build_report($client);
+$existing = db()->prepare('SELECT * FROM reports WHERE client_id = ? ORDER BY id DESC LIMIT 1');
+$existing->execute([$clientId]);
+$row = $existing->fetch();
+
+if (!$row) {
+    $insert = db()->prepare(
+        'INSERT INTO reports (client_id, life_path, destiny, soul_urge, personality, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    );
+    $insert->execute([
+        $clientId,
+        $report['lifePath'],
+        $report['destiny'],
+        $report['soulUrge'],
+        $report['personality'],
+        $report['content'],
+        date('c'),
+    ]);
+    $row = [
+        'id' => db()->lastInsertId(),
+        'life_path' => $report['lifePath'],
+        'destiny' => $report['destiny'],
+        'soul_urge' => $report['soulUrge'],
+        'personality' => $report['personality'],
+        'content' => $report['content'],
+    ];
+}
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Report</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<main class="container">
+    <div class="card">
+        <h1><?= e($client['full_name']) ?> Numerology Report</h1>
+        <div class="grid">
+            <div><span class="badge">Life Path</span><h2><?= (int) $row['life_path'] ?></h2></div>
+            <div><span class="badge">Destiny</span><h2><?= (int) $row['destiny'] ?></h2></div>
+            <div><span class="badge">Soul Urge</span><h2><?= (int) $row['soul_urge'] ?></h2></div>
+            <div><span class="badge">Personality</span><h2><?= (int) $row['personality'] ?></h2></div>
+        </div>
+        <p><?= e($row['content']) ?></p>
+        <a class="btn" href="/pay.php?client_id=<?= $clientId ?>">Collect Payment</a>
+        <a class="btn secondary" href="/download_pdf.php?client_id=<?= $clientId ?>">Download PDF</a>
+    </div>
+</main>
+</body>
+</html>
