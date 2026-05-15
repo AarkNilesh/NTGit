@@ -3,3 +3,5 @@
 /vendor/
 /react/node_modules/
 /react/dist/
+
+/dist/

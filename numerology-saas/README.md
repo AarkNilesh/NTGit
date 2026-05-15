@@ -43,6 +43,37 @@ bin\run-local.bat
 
 Open <http://127.0.0.1:8000> in your browser.
 
+
+## Create an executable local package for another PC
+
+Use this when you want to send an installable ZIP to your local PC or a client machine. The package includes run scripts, setup scripts, and desktop-shortcut installers.
+
+### Build the package on macOS / Linux / Git Bash
+
+```bash
+cd numerology-saas
+./bin/create-package.sh
+```
+
+This creates:
+
+```text
+numerology-saas/dist/numerology-saas-local.zip
+```
+
+Copy that ZIP to your local PC, extract it, and open `START-HERE.txt`.
+
+### Build the package on Windows
+
+```bat
+cd numerology-saas
+bin\create-package.bat
+```
+
+This creates `dist\numerology-saas-local.zip`. Extract it on the target PC, then double-click `Start-NumerologySaaS.bat` to run it immediately or double-click `bin\install-windows.bat` to install a local copy and create a desktop shortcut.
+
+> Note: this is a local web-app package, not a signed native Windows `.exe`. PHP 8.1+ must be installed on the target PC and available in `PATH`.
+
 ## Manual PHP flow
 
 If you do not want to use the helper script:
