@@ -5,18 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "lint": "eslint src --ext js,jsx"
+    "build": "vite build"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest"
-  },
-  "devDependencies": {
-    "eslint": "latest",
-    "eslint-plugin-react-hooks": "latest",
-    "eslint-plugin-react-refresh": "latest"
   }
 }
